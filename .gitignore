@@ -1,0 +1,7 @@
+*.c.d
+*.c.o
+laplace
+out_*.png
+.M
+.N
+out.mpg
