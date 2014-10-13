@@ -23,6 +23,7 @@ void laplace()
 		fc=turn%2;
 		fn=(fc+1)%2;
 		field_changed=0;
+#pragma omp parallel for collapse(2) private(i,j) shared(field,field_changed)
 		for(i=1; i<1+M; i++){
 			for(j=1; j<1+N; j++){
 				field[fn][i][j]=(field[fc][i-1][j]+field[fc][i][j-1]+field[fc][i+1][j]+field[fc][i][j+1])/4;
