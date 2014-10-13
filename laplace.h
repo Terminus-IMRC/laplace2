@@ -1,11 +1,11 @@
 #ifndef __LAPLACE_H_INSIDE__
 #define __LAPLACE_H_INSIDE__
 
+#define __USE_XOPEN2K
 #include <assert.h>
 #include <omp.h>
 #include <stdio.h>
 #include <stddef.h>
-#define __USE_XOPEN2K
 #include <pthread.h>
 #include <errno.h>
 #include <stdlib.h>

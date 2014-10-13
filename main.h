@@ -1,8 +1,8 @@
 #ifndef __MAIN_H_INSIDE__
 #define __MAIN_H_INSIDE__
 
-#include <assert.h>
 #define __USE_XOPEN2K
+#include <assert.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <errno.h>
