@@ -22,12 +22,18 @@ void laplace()
 
 		fc=turn%2;
 		fn=(fc+1)%2;
-		field_changed=0;
 		for(i=1; i<1+M; i++){
 			for(j=1; j<1+N; j++){
 				field[fn][i][j]=(field[fc][i-1][j]+field[fc][i][j-1]+field[fc][i+1][j]+field[fc][i][j+1])/4;
-				if((!field_changed) && field[fc][i][j]!=field[fn][i][j])
+			}
+		}
+		field_changed=0;
+		for(i=1; i<1+M; i++){
+			for(j=1; j<1+N; j++){
+				if(field[fc][i][j]!=field[fn][i][j]){
 					field_changed=1;
+					break;
+				}
 			}
 		}
 		if(!field_changed)
