@@ -12,7 +12,6 @@
 #include "ncpus.h"
 
 	extern long int turn;
-	extern int fc, fn;
 
 	void laplace_init();
 	void laplace();

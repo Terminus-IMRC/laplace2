@@ -1,7 +1,6 @@
 #include "laplace.h"
 
 long int turn;
-int fc, fn;
 
 void laplace_init()
 {
@@ -13,16 +12,28 @@ void laplace_init()
 
 void laplace()
 {
-	int i, j;
 	uint8_t field_changed;
 
+#pragma omp parallel
+{
+	int i, j;
+	int fc, fn;
+	int tid, nthreads;
+
+	tid=omp_get_thread_num();
+	nthreads=omp_get_num_threads();
+
 	for(;;){
-		printf("turn: %ld\n", turn);
-		field_output_null(turn);
+#pragma omp single
+		{
+			printf("turn: %ld\n", turn);
+			field_output_null(turn);
+			field_changed=0;
+		}
 
 		fc=turn%2;
 		fn=(fc+1)%2;
-		field_changed=0;
+#pragma omp for collapse(2) private(i,j) reduction(|:field_changed)
 		for(i=1; i<1+M; i++){
 			for(j=1; j<1+N; j++){
 				field[fn][i][j]=(field[fc][i-1][j]+field[fc][i][j-1]+field[fc][i+1][j]+field[fc][i][j+1])/4;
@@ -33,7 +44,12 @@ void laplace()
 		if(!field_changed)
 			break;
 
-		turn++;
+#pragma omp single
+		{
+			turn++;
+		}
 	}
+}
+
 	return;
 }
