@@ -23,6 +23,11 @@ void laplace()
 	tid=omp_get_thread_num();
 	nthreads=omp_get_num_threads();
 
+#pragma omp single
+{
+	printf("nthreads: %d\n", nthreads);
+}
+
 	for(;;){
 #pragma omp single
 		{
