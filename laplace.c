@@ -103,8 +103,7 @@ void* laplace(void *arg)
 
 			if(field_changed_g[0]==0)
 				break;
-		}else
-			pthread_barrier_wait(&allbrr);
+		}
 
 		turn++;
 
