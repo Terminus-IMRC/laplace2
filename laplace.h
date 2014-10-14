@@ -15,8 +15,6 @@
 
 	extern int fc, fn;
 	extern uint8_t *field_changed_g;
-	extern pthread_barrier_t **brr;
-	extern pthread_barrier_t allbrr;
 	extern int nthreads;
 
 	void laplace_init();

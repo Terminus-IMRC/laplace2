@@ -2,13 +2,12 @@
 
 int fc, fn;
 uint8_t *field_changed_g;
-pthread_barrier_t **brr, allbrr;
+pthread_barrier_t allbrr;
 int nthreads;
 
 void laplace_init()
 {
-	int i, e;
-	pthread_barrier_t *brr_1dim;
+	int e;
 	char *s;
 
 	s=getenv("LAPLACE_NUM_THREADS");
@@ -30,27 +29,8 @@ void laplace_init()
 		exit(EXIT_FAILURE);
 	}
 
-	brr_1dim=(pthread_barrier_t*)malloc((floor(nthreads/2.0)*nthreads)*sizeof(pthread_barrier_t));
-	assert(brr_1dim);
-
-	brr=(pthread_barrier_t**)malloc((floor(nthreads/2.0))*sizeof(pthread_barrier_t*));
-	assert(brr);
-
 	field_changed_g=(uint8_t*)calloc(nthreads, sizeof(uint8_t));
 	assert(field_changed_g);
-
-	for(i=0; i<floor(nthreads/2.0)*nthreads; i++){
-		e=pthread_barrier_init(brr_1dim+i, NULL, 2);
-		if(e!=0){
-			errno=e;
-			perror("pthread_barrier_t");
-			exit(EXIT_FAILURE);
-		}
-	}
-
-	for(i=0; i<nthreads/2; i++){
-		brr[i]=brr_1dim+(nthreads*i);
-	}
 
 	return;
 }
@@ -84,16 +64,13 @@ void* laplace(void *arg)
 		}
 		field_changed_g[tid]=field_changed;
 
-		for(i=0; i<(int)ceil(log(nthreads)/log(2)); i++){
-			if(tid%(int)pow(2, i)!=0)
-				break;
-			if((int)(tid/pow(2, i))%2==0){
-				if(tid+pow(2, i)>=nthreads)
-					continue;
-				pthread_barrier_wait(&(brr[tid/2][(int)(tid+pow(2, i))]));
-				field_changed_g[tid]=(field_changed_g[tid]!=0 || field_changed_g[(int)(tid+pow(2, i))]!=0)?1:0;
-			}else{
-				pthread_barrier_wait(&(brr[(int)((tid-pow(2, i))/2)][tid]));
+		pthread_barrier_wait(&allbrr);
+		if(tid==0){
+			for(i=0; i<nthreads; i++){
+				if(field_changed_g[i]==1){
+					field_changed_g[0]=1;
+					break;
+				}
 			}
 		}
 
