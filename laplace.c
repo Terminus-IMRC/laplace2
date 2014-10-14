@@ -83,28 +83,32 @@ void* laplace(void *arg)
 					field_changed=1;
 			}
 		}
-		field_changed_g[tid]=field_changed;
 
-		for(i=0; i<(int)ceil(log(nthreads)/log(2)); i++){
-			if(tid%(int)pow(2, i)!=0)
-				break;
-			if((int)(tid/pow(2, i))%2==0){
-				if(tid+pow(2, i)>=nthreads)
-					continue;
-				pthread_barrier_wait(&(brr[tid/2][(int)(tid+pow(2, i))]));
-				field_changed_g[tid]=(field_changed_g[tid]!=0 || field_changed_g[(int)(tid+pow(2, i))]!=0)?1:0;
-			}else{
-				pthread_barrier_wait(&(brr[(int)((tid-pow(2, i))/2)][tid]));
+		if(turn%TURN_GATHER_INTERVAL==0){
+			field_changed_g[tid]=field_changed;
+
+			for(i=0; i<(int)ceil(log(nthreads)/log(2)); i++){
+				if(tid%(int)pow(2, i)!=0)
+					break;
+				if((int)(tid/pow(2, i))%2==0){
+					if(tid+pow(2, i)>=nthreads)
+						continue;
+					pthread_barrier_wait(&(brr[tid/2][(int)(tid+pow(2, i))]));
+					field_changed_g[tid]=(field_changed_g[tid]!=0 || field_changed_g[(int)(tid+pow(2, i))]!=0)?1:0;
+				}else{
+					pthread_barrier_wait(&(brr[(int)((tid-pow(2, i))/2)][tid]));
+				}
 			}
-		}
+
+			pthread_barrier_wait(&allbrr);
+
+			if(field_changed_g[0]==0)
+				break;
+		}else
+			pthread_barrier_wait(&allbrr);
 
 		if(tid==0)
 			turn++;
-
-		pthread_barrier_wait(&allbrr);
-
-		if(field_changed_g[0]==0)
-			break;
 
 		pthread_barrier_wait(&allbrr);
 	}

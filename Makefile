@@ -1,12 +1,14 @@
 PROG=laplace
 SRCS=main.c laplace.c field.c ncpus.c
 SRCS_MNDEP=laplace.c field.c
+SRCS_TURN_GATHER_INTERVALDEP=laplace.c
 TARGETS=all $(PROG) %.o %.d run line clean mpg
 NONEED_DEP_TARGETS+=clean line mpg
 FPS:=25
 
 OBJS=$(SRCS:%.c=%.c.o)
 OBJS_MNDEP=$(SRCS_MNDEP:%.c=%.c.o)
+OBJS_TURN_GATHER_INTERVALDEP=$(SRCS_TURN_GATHER_INTERVALDEP:%.c=%.c.o)
 DEPS=$(SRCS:%.c=%.c.d)
 ALLDEP=$(MAKEFILE_LIST_SANS_DEPS)
 TOCLEAN=out_*.png out.mpg
@@ -58,6 +60,7 @@ endef
 
 $(eval $(call set-dep-val, M, 2048, $(OBJS_MNDEP)))
 $(eval $(call set-dep-val, N, 2048, $(OBJS_MNDEP)))
+$(eval $(call set-dep-val, TURN_GATHER_INTERVAL, 1020, $(OBJS_TURN_GATHER_INTERVALDEP)))
 
 $(PROG): $(OBJS) $(ALLDEP)
 	$(LINK.o) $(OUTPUT_OPTION) $(OBJS)
@@ -79,5 +82,5 @@ line:
 clean:
 	$(RM) $(PROG) $(OBJS)
 	$(RM) $(DEPS)
-	$(RM) $(MNUM) $(NNUM)
+	$(RM) $(MNUM) $(NNUM) $(TURN_GATHER_INTERVALNUM)
 	$(RM) $(TOCLEAN)
