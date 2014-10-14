@@ -11,7 +11,6 @@
 #include "field.h"
 #include "ncpus.h"
 
-	extern long int turn;
 	extern int fc, fn;
 
 	void laplace_init();
