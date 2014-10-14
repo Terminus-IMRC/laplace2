@@ -1,11 +1,9 @@
 #include "laplace.h"
 
-long int turn;
 int fc, fn;
 
 void laplace_init()
 {
-	turn=0;
 	field_init();
 
 	return;
@@ -13,6 +11,7 @@ void laplace_init()
 
 void laplace()
 {
+	long int turn=0;
 	int i, j;
 	uint8_t field_changed;
 

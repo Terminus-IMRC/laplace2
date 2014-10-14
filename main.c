@@ -7,9 +7,9 @@ int main()
 
 	laplace_init();
 
-	/*field_random(turn);*/
-	field_square(turn);
-	/*field_circle(turn);*/
+	/*field_random(0);*/
+	field_square(0);
+	/*field_circle(0);*/
 
 
 	gettimeofday(&start, NULL);
