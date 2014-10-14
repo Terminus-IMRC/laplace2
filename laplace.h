@@ -13,7 +13,6 @@
 #include "field.h"
 #include "ncpus.h"
 
-	extern long int turn;
 	extern int fc, fn;
 	extern uint8_t *field_changed_g;
 	extern pthread_barrier_t **brr;
