@@ -39,6 +39,7 @@ void field_output_null(long int turn)
 	return;
 }
 
+/*
 void field_output_png(long int turn)
 {
 	int i, j;
@@ -103,6 +104,7 @@ void field_output_png(long int turn)
 
 	return;
 }
+*/
 
 void field_random(long int turn)
 {
