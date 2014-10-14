@@ -1,6 +1,5 @@
 #include "laplace.h"
 
-long int turn;
 int fc, fn;
 uint8_t *field_changed_g;
 pthread_barrier_t **brr, allbrr;
@@ -22,7 +21,6 @@ void laplace_init()
 
 	printf("nthreads: %d\n", nthreads);
 
-	turn=0;
 	field_init();
 
 	e=pthread_barrier_init(&allbrr, NULL, nthreads);
@@ -59,6 +57,7 @@ void laplace_init()
 
 void* laplace(void *arg)
 {
+	long int turn=0;
 	int i, j;
 	uint8_t field_changed;
 	int tid=(int)arg;
@@ -107,8 +106,7 @@ void* laplace(void *arg)
 		}else
 			pthread_barrier_wait(&allbrr);
 
-		if(tid==0)
-			turn++;
+		turn++;
 
 		pthread_barrier_wait(&allbrr);
 	}
