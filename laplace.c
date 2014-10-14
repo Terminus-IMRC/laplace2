@@ -1,10 +1,7 @@
 #include "laplace.h"
 
-long int turn;
-
 void laplace_init()
 {
-	turn=0;
 	field_init();
 
 	return;
@@ -13,13 +10,15 @@ void laplace_init()
 void laplace()
 {
 	uint8_t field_changed;
+	long int turn=0;
 
-#pragma omp parallel
+#pragma omp parallel firstprivate(turn)
 {
 	int i, j;
 	int fc, fn;
 	int tid, nthreads;
 
+	turn=0;
 	tid=omp_get_thread_num();
 	nthreads=omp_get_num_threads();
 
@@ -49,10 +48,8 @@ void laplace()
 		if(!field_changed)
 			break;
 
-#pragma omp single
-		{
-			turn++;
-		}
+		turn++;
+#pragma omp barrier
 	}
 }
 
