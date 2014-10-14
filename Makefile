@@ -39,7 +39,7 @@ HEADERFLAGS:=-I.
 OPTFLAGS:=-pipe -O2 -g
 WARNFLAGS:=-ansi -pedantic -Wall -Wextra -W -Wundef -Wshadow -Wcast-qual -Winline -Wno-long-long -fsigned-char
 ADDCFLAGS+=-fopenmp -pthread
-LINKFLAGS+=-lpng -fopenmp -pthread
+LINKFLAGS+=-fopenmp -pthread
 RM:=rm -r -f
 WC:=wc -c -l
 
